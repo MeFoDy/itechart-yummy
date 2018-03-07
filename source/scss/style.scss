@@ -2,11 +2,14 @@
 
 @import 'utils/colors';
 @import 'utils/fonts';
+@import 'utils/sizes';
+@import 'utils/mixins';
 
 @import 'blocks/page';
 @import 'blocks/page-container';
 @import 'blocks/header';
 @import 'blocks/schedule';
-@import 'blocks/times';
-@import 'blocks/days';
+@import 'blocks/title';
+@import 'blocks/subtitle';
 @import 'blocks/footer';
+@import 'blocks/message';

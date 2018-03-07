@@ -1,8 +1,12 @@
 .page {
-    background-color: $bg-color;
     display: flex;
+
+    min-height: 90vh;
+
+    background-color: $bg-color;
+
+    font-family: 'BebasNeue', 'Arial', sans-serif;
+
     align-items: center;
     justify-content: center;
-    min-height: 90vh;
-    font-family: "BebasNeue", "Arial", sans-serif;
 }

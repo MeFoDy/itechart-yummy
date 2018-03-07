@@ -2,6 +2,7 @@ const gulp = require('gulp');
 require('./clean');
 require('./copy-static');
 require('./build-scss');
+require('./build-js');
 require('./build-cache-bust');
 require('./build-html');
 
@@ -15,6 +16,6 @@ require('./build-html');
 gulp.task('build', gulp.series(
     'clean',
     'copy:static',
-    gulp.parallel('build:scss', 'build:html'),
+    gulp.parallel('build:scss', 'build:js', 'build:html'),
     'build:cache-bust',
 ));

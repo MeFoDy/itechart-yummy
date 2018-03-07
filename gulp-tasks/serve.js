@@ -29,5 +29,6 @@ gulp.task('serve', gulp.series('build', () => {
         ],
     });
     gulp.watch(config.paths.styles.src.scss, gulp.series('build:scss'));
+    gulp.watch(config.paths.scripts.src, gulp.series('build:js'));
     gulp.watch(`${config.base.src}/index.html`, gulp.series('build:html'));
 }));

@@ -1,3 +1,25 @@
 .schedule {
+    @include tablet {
+        font-size: 28px;
+    }
+    @include desktop {
+        font-size: 32px;
+    }
+
+    text-align: center;
+
     color: $text-color;
+
+    font-size: 20px;
+    line-height: 1.2;
+}
+
+.schedule__header {
+    @include tablet {
+        font-size: 40px;
+    }
+
+    margin: 15px 0;
+
+    font-size: 32px;
 }
