@@ -22,39 +22,9 @@ const workTimes = [
         to: '19:00',
     },
 ];
-const workTimesParsed = workTimes.map(workTime => {
-    const fromParts = workTime.from.split(':');
-    const toParts = workTime.to.split(':');
-    const workTimeParsed = {
-        from: {
-            hours: +fromParts[0],
-            minutes: +fromParts[1],
-        },
-        to: {
-            hours: +toParts[0],
-            minutes: +toParts[1],
-        },
-    };
-    return workTimeParsed;
-});
-const messageClasses = {
-    success: {
-        cssClass: 'message--success',
-        when: (day) => day.isWorkDay() && day.isWorkTime() && day.getMinutesToNextBreakTime() > warningMinutes,
-    },
-    warning: {
-        cssClass: 'message--warning',
-        when: (day) => day.isWorkDay() && day.isWorkTime() && day.getMinutesToNextBreakTime() <= warningMinutes,
-    },
-    danger: {
-        cssClass: 'message--danger',
-        when: (day) => day.isWorkDay() && !day.isWorkTime(),
-    },
-};
 
-function numberForm(number, titles) {
-    const cases = [2, 0, 1, 1, 1, 2];
-    return titles[(number % 100 > 4 && number % 100 < 20) ? 2 : cases[(number % 10 < 5) ? number % 10 : 5]];
+if (!document.head) {
+    document.head = document.getElementsByTagName('head')[0];
 }
 
 class Day {
@@ -82,15 +52,23 @@ class Day {
         }, this);
     }
 
-    getMinutesToNextBreakTime() {
+    getMinutesToNextEvent(eventName) {
         let result = Infinity;
         workTimesParsed.forEach(workTime => {
-            const diff = Day.getMinutesFromMidnight(workTime.to) - this.minutesFromMidnight;
+            const diff = Day.getMinutesFromMidnight(workTime[eventName]) - this.minutesFromMidnight;
             if (diff >= 0 && diff < result) {
                 result = diff;
             }
         });
         return result;
+    }
+
+    getMinutesToNextBreakTime() {
+        return this.getMinutesToNextEvent('to');
+    }
+
+    getMinutesToNextWorkTime() {
+        return this.getMinutesToNextEvent('from');
     }
 
     getWish() {
@@ -105,6 +83,25 @@ class Day {
         return wish;
     }
 
+    getFavicon() {
+        let favicon = eventsParams.default.favicon;
+        if (day.isWorkDay()) {
+            if (day.isWorkTime()) {
+                const minutesToBreak = this.getMinutesToNextBreakTime();
+                if (minutesToBreak <= warningMinutes) {
+                    favicon = eventsParams.warning.favicon;
+                } else {
+                    favicon = eventsParams.success.favicon;
+                }
+            } else {
+                favicon = eventsParams.danger.favicon;
+            }
+        } else {
+            favicon = eventsParams.default.favicon;
+        }
+        return favicon;
+    }
+
     getAdvice() {
         let advice = 'Кофе? ☕';
         if (day.isWorkDay()) {
@@ -116,8 +113,14 @@ class Day {
                 } else {
                     advice = 'Приходите за кофе ☕';
                 }
+            } else if (Day.getMinutesFromMidnight(minTime) > this.minutesFromMidnight) {
+                advice = 'Рабочий день еще не начался 🤷';
+            } else if (Day.getMinutesFromMidnight(maxTime) <= this.minutesFromMidnight) {
+                advice = 'Рабочий день закончился 😉';
             } else {
-                advice = 'В Yummy перерыв ⏳';
+                const minutesToCoffee = this.getMinutesToNextWorkTime();
+                const minutesForm = numberForm(minutesToCoffee, ['минута', 'минуты', 'минут']);
+                advice = `В Yummy перерыв ⏳ (ещё ${minutesToCoffee} ${minutesForm})`;
             }
         } else {
             advice = 'Сегодня выходной! 🏠';
@@ -135,7 +138,7 @@ class Day {
     }
 
     setColor() {
-        Object.values(messageClasses).forEach(messageClass => {
+        Object.values(eventsParams).forEach(messageClass => {
             if (messageClass.when(this)) {
                 this.messageElement.classList.add(messageClass.cssClass);
             } else {
@@ -159,8 +162,76 @@ class Day {
     }
 }
 
+const workTimesParsed = workTimes.map(workTime => {
+    const fromParts = workTime.from.split(':');
+    const toParts = workTime.to.split(':');
+    const workTimeParsed = {
+        from: {
+            hours: +fromParts[0],
+            minutes: +fromParts[1],
+        },
+        to: {
+            hours: +toParts[0],
+            minutes: +toParts[1],
+        },
+    };
+    return workTimeParsed;
+});
+
+let minTime = workTimesParsed[0].from;
+let maxTime = workTimesParsed[0].to;
+workTimesParsed.forEach(workTime => {
+    if (Day.getMinutesFromMidnight(workTime.from) < Day.getMinutesFromMidnight(minTime)) {
+        minTime = workTime.from;
+    }
+    if (Day.getMinutesFromMidnight(workTime.to) > Day.getMinutesFromMidnight(maxTime)) {
+        maxTime = workTime.to;
+    }
+});
+
+const eventsParams = {
+    default: {
+        cssClass: 'message--default',
+        favicon: 'images/coffee.png',
+        when: (day) => !day.isWorkDay(),
+    },
+    success: {
+        cssClass: 'message--success',
+        favicon: 'images/success.png',
+        when: (day) => day.isWorkDay() && day.isWorkTime() && day.getMinutesToNextBreakTime() > warningMinutes,
+    },
+    warning: {
+        cssClass: 'message--warning',
+        favicon: 'images/warning.png',
+        when: (day) => day.isWorkDay() && day.isWorkTime() && day.getMinutesToNextBreakTime() <= warningMinutes,
+    },
+    danger: {
+        cssClass: 'message--danger',
+        favicon: 'images/danger.png',
+        when: (day) => day.isWorkDay() && !day.isWorkTime(),
+    },
+};
+
+function numberForm(number, titles) {
+    const cases = [2, 0, 1, 1, 1, 2];
+    return titles[(number % 100 > 4 && number % 100 < 20) ? 2 : cases[(number % 10 < 5) ? number % 10 : 5]];
+}
+
 const messageElement = document.querySelector('.message');
 const day = new Day(messageElement);
+
+function changeFavicon(src) {
+    const link = document.createElement('link'),
+        oldLink = document.getElementById('favicon');
+    link.id = 'favicon';
+    link.rel = 'shortcut icon';
+    link.href = src;
+    if (oldLink) {
+        document.head.removeChild(oldLink);
+    }
+    document.head.appendChild(link);
+}
+
 function update() {
     day.update();
     day.setWish();
@@ -169,6 +240,8 @@ function update() {
     if (document.title !== advice) {
         document.title = advice;
     }
+    changeFavicon(day.getFavicon());
 }
+
 setInterval(update, 5000);
 update();
