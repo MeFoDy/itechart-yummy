@@ -1,4 +1,5 @@
 const gulp = require('gulp');
+const gulpif = require('gulp-if');
 const config = require('./config');
 const sourcemaps = require('gulp-sourcemaps');
 const sass = require('gulp-sass');
@@ -17,7 +18,7 @@ gulp.task('build:scss', () => {
     const dist = config.paths.styles.dist.css;
     return gulp
         .src(src)
-        .pipe(sourcemaps.init())
+        .pipe(gulpif(config.isDev, sourcemaps.init()))
         .pipe(
             sass({
                 errLogToConsole: true,
@@ -30,6 +31,6 @@ gulp.task('build:scss', () => {
             cascade: false,
         }))
         .pipe(csso().on('error', utils.notifyError('Csso Error')))
-        .pipe(sourcemaps.write('.'))
+        .pipe(gulpif(config.isDev, sourcemaps.write('.')))
         .pipe(gulp.dest(dist));
 });

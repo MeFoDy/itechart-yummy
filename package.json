@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "iTechArt Yummy Schedule",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "build": "gulp build",
+    "build-prod": "gulp build --production"
   },
   "author": "Nikita Dubko <n.a.dubko@gmail.com>",
   "license": "ISC",

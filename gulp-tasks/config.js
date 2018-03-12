@@ -1,3 +1,5 @@
+const util = require('gulp-util');
+
 const base = {
     src: 'source',
     dist: 'dist',
@@ -30,8 +32,11 @@ const paths = {
 
 const autoprefixer = ['last 2 versions', 'IE 9'];
 
+const isDev = !util.env.production;
+
 module.exports = {
     autoprefixer,
     base,
     paths,
+    isDev,
 };

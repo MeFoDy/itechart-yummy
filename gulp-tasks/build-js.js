@@ -1,4 +1,5 @@
 const gulp = require('gulp');
+const gulpif = require('gulp-if');
 const babel = require('gulp-babel');
 const sourcemaps = require('gulp-sourcemaps');
 const uglify = require('gulp-uglify');
@@ -16,13 +17,13 @@ gulp.task('build:js', () => {
     const dist = config.paths.scripts.dist;
     return gulp
         .src(src)
-        .pipe(sourcemaps.init())
+        .pipe(gulpif(config.isDev, sourcemaps.init()))
         .pipe(babel({
             presets: ['env'],
         }))
         .pipe(
             uglify().on('error', utils.notifyError('Uglify Error'))
         )
-        .pipe(sourcemaps.write('.'))
+        .pipe(gulpif(config.isDev, sourcemaps.write('.')))
         .pipe(gulp.dest(dist));
 });
