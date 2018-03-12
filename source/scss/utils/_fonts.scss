@@ -1,8 +1,9 @@
 @font-face {
-    font-family: 'BebasNeue';
+    font-family: 'Bebas Neue';
+    font-weight: normal;
+    font-style: normal;
 
-    src: local('BebasNeue'),
-    url('../fonts/BebasNeue.woff2') format('woff2'),
-    url('../fonts/BebasNeue.woff') format('woff');
+    src: local('Bebas Neue Regular'), local('BebasNeueRegular'),
+    url('../fonts/BebasNeueRegular.woff') format('woff');
     font-display: swap;
 }
