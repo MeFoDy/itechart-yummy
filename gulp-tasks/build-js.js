@@ -18,9 +18,7 @@ gulp.task('build:js', () => {
     return gulp
         .src(src)
         .pipe(gulpif(config.isDev, sourcemaps.init()))
-        .pipe(babel({
-            presets: ['env'],
-        }))
+        .pipe(babel())
         .pipe(
             uglify().on('error', utils.notifyError('Uglify Error'))
         )
