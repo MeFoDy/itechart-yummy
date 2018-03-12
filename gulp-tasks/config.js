@@ -15,8 +15,12 @@ const paths = {
         dist: `${base.dist}/fonts`,
     },
     scripts: {
-        src: `${base.src}/js/**/*.js`,
+        src: `${base.src}/js/script.js`,
         dist: `${base.dist}/js`,
+    },
+    sw: {
+        src: `${base.src}/js/sw.js`,
+        dist: `${base.dist}`,
     },
     styles: {
         src: {

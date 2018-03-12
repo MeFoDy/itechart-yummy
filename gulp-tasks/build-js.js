@@ -12,9 +12,20 @@ const utils = require('./utils');
  * @task {build:js}
  * @group {Build}
  */
-gulp.task('build:js', () => {
-    const src = config.paths.scripts.src;
-    const dist = config.paths.scripts.dist;
+gulp.task('build:js', gulp.parallel([
+    () => {
+        const src = config.paths.scripts.src;
+        const dist = config.paths.scripts.dist;
+        return buildJs(src, dist);
+    },
+    () => {
+        const src = config.paths.sw.src;
+        const dist = config.paths.sw.dist;
+        return buildJs(src, dist);
+    },
+]));
+
+function buildJs(src, dist) {
     return gulp
         .src(src)
         .pipe(gulpif(config.isDev, sourcemaps.init()))
@@ -24,4 +35,4 @@ gulp.task('build:js', () => {
         )
         .pipe(gulpif(config.isDev, sourcemaps.write('.')))
         .pipe(gulp.dest(dist));
-});
+}
