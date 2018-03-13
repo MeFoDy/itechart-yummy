@@ -9,4 +9,11 @@
 
     align-items: center;
     justify-content: center;
+
+    @media print {
+        display: block;
+
+        background: $print-bg-color;
+        min-height: 0;
+    }
 }

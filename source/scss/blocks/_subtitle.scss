@@ -1,3 +1,7 @@
 .subtitle {
     color: $text-primary-color;
+
+    @media print {
+        color: $print-secondary-color;
+    }
 }

@@ -27,10 +27,19 @@
     &--danger {
         border-color: $text-primary-color;
     }
+
+    @media print {
+        color: $print-primary-color;
+        border-color: $print-secondary-color;
+    }
 }
 
 .message__advice {
     margin: 0;
+
+    @media print {
+        display: none;
+    }
 }
 
 .message__wish {

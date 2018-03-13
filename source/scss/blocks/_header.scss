@@ -11,5 +11,9 @@
         width: 200px;
     }
 
+    @media print {
+        display: none;
+    }
+
     width: 120px;
 }
