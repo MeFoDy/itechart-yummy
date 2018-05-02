@@ -1,0 +1,32 @@
+.balloons {
+    $size: 120px;
+
+    position: absolute;
+    top: -#{$size - 5px};
+    right: 0;
+
+    width: $size;
+    height: $size;
+
+    background-image: url('../images/balloons.svg');
+    background-repeat: no-repeat;
+    background-position: bottom right;
+    background-size: contain;
+
+    &--hidden {
+        display: none;
+    }
+
+    @include tablet {
+        $size: 200px;
+
+        top: -#{$size - 5px};
+
+        width: $size;
+        height: $size;
+    }
+
+    @media print {
+        display: none;
+    }
+}

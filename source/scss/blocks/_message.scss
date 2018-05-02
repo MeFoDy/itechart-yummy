@@ -6,6 +6,8 @@
         font-size: 26px;
     }
 
+    position: relative;
+
     margin-top: 15px;
     padding: 0.5em 1em;
 
@@ -44,4 +46,16 @@
 
 .message__wish {
     margin: 0;
+}
+
+.message__holiday {
+    margin: 0;
+
+    &--hidden {
+        display: none;
+    }
+
+    @media print {
+        display: none;
+    }
 }

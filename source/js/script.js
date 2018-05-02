@@ -22,6 +22,23 @@ const workTimes = [
         to: '19:00',
     },
 ];
+const holidays = [
+    {
+        month: 2,
+        day: 6,
+        message: 'Сегодня Международный день бариста! 🍷',
+    },
+    {
+        month: 10,
+        day: 1,
+        message: 'Сегодня Международный день кофе! ☕',
+    },
+    {
+        month: 7,
+        day: 17,
+        message: 'У Насти День Рождения 🎂! Не забудьте поздравить любимого бариста!',
+    },
+];
 
 if (!document.head) {
     document.head = document.getElementsByTagName('head')[0];
@@ -32,6 +49,8 @@ class Day {
         this.messageElement = messageElement;
         this.messageWishElement = messageElement.querySelector('.message__wish');
         this.messageAdviceElement = messageElement.querySelector('.message__advice');
+        this.messageHolidayElement = messageElement.querySelector('.message__holiday');
+        this.balloonElement = messageElement.querySelector('.balloons');
         this.update();
     }
 
@@ -128,6 +147,36 @@ class Day {
         return advice;
     }
 
+    isHoliday() {
+        return holidays.some(holiday => holiday.day === this.day && holiday.month === this.month);
+    }
+
+    getHoliday() {
+        return holidays.find(holiday => holiday.day === this.day && holiday.month === this.month);
+    }
+
+    getHolidayText() {
+        let text = 'С праздником!';
+        if (this.isHoliday()) {
+            text = this.getHoliday().message;
+        }
+        return text;
+    }
+
+    setHoliday() {
+        const text = this.getHolidayText();
+        const messageClass = 'message__holiday--hidden';
+        const balloonsClass = 'balloons--hidden';
+        if (this.isHoliday()) {
+            this.messageHolidayElement.textContent = text;
+            this.messageHolidayElement.classList.remove(messageClass);
+            this.balloonElement.classList.remove(balloonsClass);
+        } else {
+            this.messageHolidayElement.classList.add(messageClass);
+            this.balloonElement.classList.add(balloonsClass);
+        }
+    }
+
     setWish() {
         this.messageWishElement.textContent = this.getWish();
     }
@@ -155,6 +204,8 @@ class Day {
             hours: this.hours,
             minutes: this.minutes,
         });
+        this.month = this.date.getMonth() + 1;
+        this.day = this.date.getDate();
     }
 
     static getMinutesFromMidnight(day) {
@@ -226,16 +277,17 @@ function changeFavicon(src) {
     link.id = 'favicon';
     link.rel = 'shortcut icon';
     link.href = src;
-    if (oldLink) {
+    if (oldLink && !oldLink.href.includes(src)) {
         document.head.removeChild(oldLink);
+        document.head.appendChild(link);
     }
-    document.head.appendChild(link);
 }
 
 function update() {
     day.update();
     day.setWish();
     day.setAdvice();
+    day.setHoliday();
     const advice = `${day.getAdvice()} | iTechArt Yummy`;
     if (document.title !== advice) {
         document.title = advice;

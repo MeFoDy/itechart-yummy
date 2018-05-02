@@ -32,6 +32,10 @@ const paths = {
             css: `${base.dist}/css`,
         },
     },
+    normalize: {
+        src: './node_modules/normalize.css/normalize.css',
+        dist: `${base.dist}/css`,
+    },
 };
 
 const autoprefixer = ['last 2 versions', 'IE 9'];

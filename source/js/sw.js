@@ -3,6 +3,7 @@ const cacheName = 'v1';
 const assetsToCache = [
     '/itechart-yummy/',
     '/itechart-yummy/index.html',
+    '/itechart-yummy/css/normalize.css',
     '/itechart-yummy/css/style.css',
     '/itechart-yummy/js/script.js',
     '/itechart-yummy/fonts/BebasNeueRegular.woff',
@@ -11,6 +12,7 @@ const assetsToCache = [
     '/itechart-yummy/images/danger.png',
     '/itechart-yummy/images/success.png',
     '/itechart-yummy/images/warning.png',
+    '/itechart-yummy/images/balloons.svg',
 ];
 
 self.addEventListener('install', (event) => {
